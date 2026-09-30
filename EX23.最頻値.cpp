@@ -5,23 +5,33 @@
 using namespace std;
 
 int main() {
-    map<int, int> data;
+
     int N = 0;
     cin >> N;
+    vector<int> IN(N);
 
     for (int i = 0; i < N; i++) {
-        int num = 0, count = 1;
-        cin >> num;
-        data[num] += count;
+        cin >> IN.at(i);
     }
-    int max = 0;
-    for (auto a : data) {
-        if (max == 0) {
-            max = a.first;
+
+    map<int, int> cnt;
+    for (int a:IN) {
+        if(cnt.count(a)) {
+            cnt.at(a)++;
         }
-        else if (max < a.first) {
-            max = a.first;
-        } 
+        else {
+            cnt[a] = 1;
+        }
     }
-    cout << max << " " << data[max] << endl;
+
+    int max = 0, ans = 0;
+
+    for (int b : IN) {
+        if (max < cnt.at(b)) {
+            max = cnt.at(b);
+            ans = b;
+        }
+    }
+
+    cout << ans << " " << max << endl;
 }
