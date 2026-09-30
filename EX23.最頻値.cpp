@@ -1,26 +1,27 @@
 #include <queue>
 #include <vector>
 #include <iostream>
-
+#include <map>
 using namespace std;
 
 int main() {
-    priority_queue<int> pq;
+    map<int, int> data;
     int N = 0;
     cin >> N;
 
     for (int i = 0; i < N; i++) {
-        int num = 0;
+        int num = 0, count = 1;
         cin >> num;
-        pq.push(num);
+        data[num] += count;
     }
-
-    int max = pq.top();
-    int count = 0;
-
-    while(!pq.empty()) {
-        if (pq.top() == max) count++;
-        pq.pop();
+    int max = 0;
+    for (auto a : data) {
+        if (max == 0) {
+            max = a.first;
+        }
+        else if (max < a.first) {
+            max = a.first;
+        } 
     }
-    cout << max << " " << count << endl;
+    cout << max << " " << data[max] << endl;
 }
