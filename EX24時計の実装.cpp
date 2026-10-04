@@ -16,50 +16,51 @@ struct Clock{
     int minute;
     int second;
 
-// メンバ関数 set の定義を書く
-//   関数名: set
-//   引数: int h, int m, int s (それぞれ時、分、秒を表す)
-//   返り値: なし
-//   関数の説明:
-//     時・分・秒を表す3つの引数を受け取り、
-//     それぞれ、メンバ変数 hour, minute, second に代入する
-void set(int h, int m, int s) {
-    hour = h;
-    minute = m;
-    second = s;
-}
-
-// メンバ関数 to_str の定義を書く
-//   関数名: to_str
-//   引数: なし
-//   返り値: string型
-//   関数の仕様:
-//     メンバ変数が表す時刻の文字列を返す
-//     時刻の文字列は次のフォーマット
-//     "HH:MM:SS"
-//     HH、MM、SSはそれぞれ時間、分、秒を2桁で表した文字列
-string to_str() {
-    string HH, MM, SS;
-    if (hour < 10) {
-        HH = "0" + to_string(hour);
-    } else {
-        HH = to_string(hour);
-    }
-    if (minute < 10) {
-        MM = "0" + to_string(minute);
-    }
-    else {
-        MM = to_string(minute);
-    }
-    if (second < 10) {
-        SS = "0" + to_string(second);
-    }
-    else {
-        SS = to_string(second);
+    // メンバ関数 set の定義を書く
+    //   関数名: set
+    //   引数: int h, int m, int s (それぞれ時、分、秒を表す)
+    //   返り値: なし
+    //   関数の説明:
+    //     時・分・秒を表す3つの引数を受け取り、
+    //     それぞれ、メンバ変数 hour, minute, second に代入する
+    void set(int h, int m, int s) {
+        hour = h;
+        minute = m;
+        second = s;
     }
 
-    return HH + ":" + MM + ":" + SS;
-}
+    // メンバ関数 to_str の定義を書く
+    //   関数名: to_str
+    //   引数: なし
+    //   返り値: string型
+    //   関数の仕様:
+    //     メンバ変数が表す時刻の文字列を返す
+    //     時刻の文字列は次のフォーマット
+    //     "HH:MM:SS"
+    //     HH、MM、SSはそれぞれ時間、分、秒を2桁で表した文字列
+    string to_str() {
+        string HH, MM, SS;
+        if (hour < 10) {
+            HH = "0" + to_string(hour);
+        } else {
+            HH = to_string(hour);
+        }
+        if (minute < 10) {
+            MM = "0" + to_string(minute);
+        }
+        else {
+            MM = to_string(minute);
+        }
+        if (second < 10) {
+            SS = "0" + to_string(second);
+        }
+        else {
+            SS = to_string(second);
+        }
+
+        return HH + ":" + MM + ":" + SS;
+    }
+
 // メンバ関数 shift の定義を書く
 //   関数名: shift
 //   引数: int diff_second
@@ -69,47 +70,44 @@ string to_str() {
 //     diff_second の値が負の場合、時刻を戻す
 //     diff_second の値が正の場合、時刻を進める
 //     diff_second の値は -86400 ~ 86400 の範囲を取とりうる
-void shift(int diff_second){
-    if (diff_second < 0) {
-        int sum = second + diff_second;
-        // 合計値が0未満になったら
-        if (sum < 0) {
-            minute--;
-            if (minute < 0) {
-                minute = 59;
-                hour--;
-                if (hour <= 0) {
-                    hour = 23;
-                }
-            }
-            diff_second += 60;
-            shift(diff_second);
-        }
-        else if (sum >= 0) {
-            second += diff_second;
-        }
-    }
-    else if (diff_second > 0){
-        int sum = second + diff_second;
-        // 合計値が60を超えたら
-        if (sum > 59) {
-            minute++;
-            if (minute > 59) {
-                hour++;
-                if (hour >= 24) {
-                    hour = 0;
-                }
-                minute -= 60;
-            }
-            diff_second -= 60;
-            shift(diff_second);
-        }
-        else if (sum <= 59) {
-            second += diff_second;
-        }
-    }
-}
+    void shift(int diff_second){
+        int diff_hour = diff_second / 3600;
+        diff_second %= 3600;
+        int diff_minute = diff_second / 60;
+        diff_second %= 60;
 
+        second += diff_second;
+        if (second >= 60) {
+            // 分から繰り上げ
+            minute += 1;
+            second -= 60;
+        }else if (second < 0){
+            // 分から繰り下げ
+            minute -= 1;
+            second += 60;
+        }
+
+        minute += diff_minute;
+        if (minute >= 60) {
+            // 時間へ繰り上げ
+            hour += 1;
+            minute -= 60;
+        }
+        else if (minute < 0) {
+            // 時間へ繰り下げ
+            hour -= 1;
+            minute += 60;
+        }
+
+        hour += diff_hour;
+        if (hour >= 24) {
+            hour -= 24;
+        }
+        else if (hour < 0) {
+            hour += 24;
+        }
+
+    }
 };
 
 // -------------------
