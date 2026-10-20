@@ -12,36 +12,31 @@ int main() {
 
     // 全員の座標の入力
     for (int i = 0; i < humanNum; i++) {
-        int HN = 0;
-        cin >> HN;
-        humanLine.push_back(HN);
+        cin >> humanLine[i];
     }
 
-    int lineHumanNum = 0; // 一線を画した数値の数
     vector<int> lineHuman; // 一線を画した数値
-    int cnt1 = 0, cnt2 = 0;
-    for (int num : humanLine) {
-        cnt1++;
+
+    for (int i = 0; i < humanNum; i++) {
         bool fNoLine = false;
         int cnt2 = 0;
-        for (int num2 : humanLine) {
-            cnt2++;
-            if (cnt1 == cnt2) continue;
+        for (int j = 0; j < humanNum; j++) {
+
+            if (i == j) continue;
 
             // 座標の差が一線を画さないなら、フラグをON
-            if (abs(num - num2) < lineNum) {
+            if (abs(humanLine[i] - humanLine[j]) < lineNum) {
                 fNoLine = true;
                 break;
             }
         }
         // 全ての数値と一線を画している場合
         if (!fNoLine) {
-            lineHumanNum++;
-            lineHuman.push_back(cnt1);
+            lineHuman.push_back(i + 1);
         }
     }
     // 一線を画した数
-    cout << lineHumanNum << endl;
+    cout << lineHuman.size() << endl;
 
     // 一線を画した数値全て出力
     for (int HN : lineHuman) {
